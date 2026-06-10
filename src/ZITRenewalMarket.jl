@@ -12,6 +12,7 @@ include("agents.jl")
 include("renewal.jl")
 include("equilibrium.jl")
 include("trading.jl")
+include("cda.jl")
 include("simulation.jl")
 include("coarse_grain.jl")
 include("diagnostics.jl")
@@ -23,6 +24,8 @@ export Agent,
        DiagnosticRecord,
        EquilibriumRecord,
        MarketConfig,
+       LimitOrder,
+       OrderBook,
        RenewalRecord,
        SimulationResult,
        TradeRecord,
@@ -36,6 +39,7 @@ export Agent,
        make_plots,
        random_rational_between,
        refresh_agent!,
+       run_cda_simulation,
        run_simulation,
        summarize_diagnostics,
        write_results

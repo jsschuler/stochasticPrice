@@ -46,6 +46,22 @@ struct TradeRecord
     quantity::Int
 end
 
+struct LimitOrder
+    agent_id::Int
+    side::Symbol
+    price::Price
+    sequence::Int
+end
+
+mutable struct OrderBook
+    bids::Vector{LimitOrder}
+    asks::Vector{LimitOrder}
+    active_sequences::Dict{Int,Int}
+    next_sequence::Int
+end
+
+OrderBook() = OrderBook(LimitOrder[], LimitOrder[], Dict{Int,Int}(), 1)
+
 struct EquilibriumRecord
     period::Int
     p_low::Union{Missing,Price}
@@ -127,8 +143,8 @@ function validate(config::MarketConfig)
     config.n_periods > 0 || throw(ArgumentError("n_periods must be positive"))
     all(>(0), config.grain_sizes) ||
         throw(ArgumentError("grain_sizes must contain positive integers"))
-    config.transaction_price_rule == :midpoint ||
-        throw(ArgumentError("version 1 supports only :midpoint pricing"))
+    config.transaction_price_rule in (:midpoint, :standing) ||
+        throw(ArgumentError("transaction_price_rule must be :midpoint or :standing"))
     return config
 end
 
